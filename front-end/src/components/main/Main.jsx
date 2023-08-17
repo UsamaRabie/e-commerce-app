@@ -1,4 +1,4 @@
-import { Box, Container, Dialog, IconButton, Rating, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Container, Dialog, IconButton, Rating, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -20,6 +20,7 @@ function Main() {
     }
   };
   const [open, setOpen] = useState(false);
+  const [clickedProduct , setClickedProduct]=useState({})
 
 
   const handleClose = (value) => {
@@ -35,12 +36,17 @@ function Main() {
   console.log(data)
   if(isLoading){
     return(
-      <Typography variant="h5">Loading...</Typography>
+      <Box  sx={{py:5,textAlign:"center"}}>
+      <CircularProgress />
+    </Box>
     )
   }
   if(error){
     return(
-      <h5>{error.message}</h5>
+    <Container sx={{py:5,textAlign:"center"}}>
+        <h5>{error.error}</h5>
+        <h4>Please try again in another time</h4>
+    </Container>
       
     )
   }
@@ -111,12 +117,15 @@ if(data){
                       key={item.id}
                       sx={{
                         maxWidth: 333,
-                        mt: 6,
+                        mt: 3,
+                        px:2
+                        ,
                         ":hover .MuiCardMedia-root ": {
                           rotate: "1deg",
                           scale: "1.1",
                           transition: "0.35s",
                         },
+                      
                       }}
                     >
                       <CardMedia
@@ -150,7 +159,11 @@ if(data){
                         
                           sx={{ textTransform: "capitalize" }}
                           size="large"
-                          onClick={()=>setOpen(true)}
+                          onClick={()=>
+                            {
+                            setOpen(true)
+                            setClickedProduct(item)
+                            }}
                         >
                           <AddShoppingCartOutlined sx={{ mr: 1 }} fontSize="small" />
                           add to cart
@@ -185,7 +198,7 @@ if(data){
                 >
                   <Close />
                 </IconButton>
-          <Modal/>
+          <Modal clickedProduct={clickedProduct}/>
             
           </Dialog>
           </Container>
